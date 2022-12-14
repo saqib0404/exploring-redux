@@ -8,13 +8,35 @@ const { createStore } = require('redux')
 const INCREMENT = 'INCREMENT';
 const DECREMENT = 'DECREMENT';
 const RESET = 'RESET';
+const INCREMENT_BY_VALUE = "INCREMENT_BY_VALUE";
+const ADD_USER = "ADD_USER";
 
 // STATE
 const initialCount = {
     count: 0
 }
 
+const userState = {
+    count: 1,
+    users: ['saqib']
+}
+
 // ACTIONS
+
+const addUser = user => {
+    return {
+        type: ADD_USER,
+        payload: user
+    }
+}
+
+const incrementByValue = (value) => {
+    return {
+        type: INCREMENT_BY_VALUE,
+        payload: value
+    }
+}
+
 const incrementCount = () => {
     return {
         type: INCREMENT
@@ -34,6 +56,18 @@ const resetCount = () => {
 }
 
 // REDUCER
+const userReducer = (state = userState, action) => {
+    switch (action.type) {
+        case ADD_USER:
+            return {
+                count: state.count + 1,
+                users: [...state.users, action.payload]
+            }
+
+        default:
+            state;
+    }
+}
 const counterReducer = (state = initialCount, action) => {
     switch (action.type) {
         case INCREMENT:
@@ -51,20 +85,27 @@ const counterReducer = (state = initialCount, action) => {
                 ...state,
                 count: 0
             }
+        case INCREMENT_BY_VALUE:
+            return {
+                ...state,
+                count: state.count + action.payload
+            }
         default:
             state;
     }
 }
 
 // Store
-const store = createStore(counterReducer);
+const store = createStore(userReducer);
 store.subscribe(() => {
     console.log(store.getState());
 })
 
-store.dispatch(incrementCount());
-store.dispatch(incrementCount());
-store.dispatch(decrementCount());
-store.dispatch(incrementCount());
-store.dispatch(resetCount());
-store.dispatch(incrementCount());
+store.dispatch(addUser("saad"));
+// store.dispatch(incrementCount());
+// store.dispatch(decrementCount());
+// store.dispatch(incrementCount());
+// store.dispatch(resetCount());
+// store.dispatch(incrementCount());
+// store.dispatch(incrementByValue(10));
+// store.dispatch(incrementByValue(5));
